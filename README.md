@@ -22,3 +22,36 @@ Computer Systems: A Programmer's Perspective, 3/E (CS:APP3e)
 | Proxy Lab        | [proxylab.pdf](http://csapp.cs.cmu.edu/3e/proxylab.pdf)   | [proxylab.tar](http://csapp.cs.cmu.edu/3e/proxylab-handout.tar) |                                                              |                                                              |
 
 (*注: 若空白则表示未完成实验及报告*)
+
+
+
+重新开始做实验
+
+```sh
+# clone
+git clone https://github.com/L7577/CSAPP_labs.git
+cd CSAPP_labs
+ls
+README.md  source
+
+# 解压 datalab tar包到当前目录
+tar -xf source/datalab-handout.tar 
+
+cd datalab
+# 开始做datalab
+```
+
+
+
+查看已完成实验
+
+```sh
+git clone https://github.com/L7577/CSAPP_labs.git
+cd CSAPP_labs
+
+# 切换到 datalab 分支
+git checkout datalab
+```
+
+
+
