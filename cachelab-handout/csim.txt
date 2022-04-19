@@ -1,0 +1,315 @@
+  7f6c29433168,-504736062 miss after miss-setindex = 1, i = 0
+
+L 7ff000370,8 miss after miss-setindex = 2, i = 0
+
+
+ 7ff000370,8 hit setindex = 2, i = 0
+
+
+ 400567,3 miss after miss-setindex = 0, i = 0
+
+L 7ff000384,4 miss after miss-setindex = 0, i = 1
+
+
+ 7ff000384,4 hit setindex = 0, i = 1
+
+
+ 40056a,3 miss after miss-setindex = 1, i = 1
+
+
+ 40056d,3 hit setindex = 1, i = 1
+
+L 7ff00038c,4 miss after miss-setindex = 1, i = 2
+
+
+ 7ff00038c,4 hit setindex = 1, i = 2
+
+
+ 400570,3 miss after miss-setindex = 2, i = 1
+
+S 600a80,4 miss after miss-setindex = 0, i = 2
+
+
+ 600a80,4 hit setindex = 0, i = 2
+
+
+ 400573,4 hit setindex = 2, i = 1
+
+M 7ff000388,4 hit setindex = 1, i = 2
+hit setindex = 1, i = 2
+
+
+ 7ff000388,4 hit setindex = 1, i = 2
+hit setindex = 1, i = 2
+
+
+ 400577,4 hit setindex = 2, i = 1
+hit setindex = 2, i = 1
+
+L 7ff000388,4 hit setindex = 1, i = 2
+
+
+ 7ff000388,4 hit setindex = 1, i = 2
+
+
+ 40057b,2 miss after miss-setindex = 3, i = 0
+
+
+ 40053c,3 miss after miss-setindex = 3, i = 1
+
+L 7ff000384,4 hit setindex = 0, i = 1
+
+
+ 7ff000384,4 hit setindex = 0, i = 1
+
+
+ 40053f,2 hit setindex = 3, i = 1
+
+
+ 400541,4 miss after miss-setindex = 0, i = 3
+
+
+ 400545,3 hit setindex = 0, i = 3
+
+
+ 400548,4 miss after miss-setindex = 1, i = 3
+
+L 7ff000378,8 miss after miss-setindex = 3, i = 2
+
+
+ 7ff000378,8 hit setindex = 3, i = 2
+
+
+ 40054c,3 hit setindex = 1, i = 3
+
+L 7ff000388,4 hit setindex = 1, i = 2
+
+
+ 7ff000388,4 hit setindex = 1, i = 2
+
+
+ 40054f,2 hit setindex = 1, i = 3
+
+
+ 400551,3 miss after miss-setindex = 2, i = 2
+
+L 600a2c,4 miss max_time_stamp = -10000000eviction setindex = 1, i = 0
+
+
+ 600a2c,4 hit setindex = 1, i = 0
+
+
+ 400554,3 hit setindex = 2, i = 2
+
+S 7ff00038c,4 hit setindex = 1, i = 2
+
+
+ 7ff00038c,4 hit setindex = 1, i = 2
+
+
+ 400557,3 hit setindex = 2, i = 2
+
+L 7ff000388,4 hit setindex = 1, i = 2
+
+
+ 7ff000388,4 hit setindex = 1, i = 2
+
+
+ 40055a,2 miss after miss-setindex = 3, i = 3
+
+
+ 40055c,4 hit setindex = 3, i = 3
+
+
+ 400560,3 hit setindex = 0, i = 0
+
+
+ 400563,4 hit setindex = 0, i = 0
+
+L 7ff000370,8 hit setindex = 2, i = 0
+
+
+ 7ff000370,8 hit setindex = 2, i = 0
+
+
+ 400567,3 hit setindex = 0, i = 0
+
+L 7ff000384,4 hit setindex = 0, i = 1
+
+
+ 7ff000384,4 hit setindex = 0, i = 1
+
+
+ 40056a,3 hit setindex = 1, i = 1
+
+
+ 40056d,3 hit setindex = 1, i = 1
+
+L 7ff00038c,4 hit setindex = 1, i = 2
+
+
+ 7ff00038c,4 hit setindex = 1, i = 2
+
+
+ 400570,3 hit setindex = 2, i = 1
+
+S 600a90,4 miss after miss-setindex = 2, i = 3
+
+
+ 600a90,4 hit setindex = 2, i = 3
+
+
+ 400573,4 hit setindex = 2, i = 1
+
+M 7ff000388,4 hit setindex = 1, i = 2
+hit setindex = 1, i = 2
+
+
+ 7ff000388,4 hit setindex = 1, i = 2
+hit setindex = 1, i = 2
+
+
+ 400577,4 hit setindex = 2, i = 1
+hit setindex = 2, i = 1
+
+L 7ff000388,4 hit setindex = 1, i = 2
+
+
+ 7ff000388,4 hit setindex = 1, i = 2
+
+
+ 40057b,2 hit setindex = 3, i = 0
+
+
+ 40057d,4 hit setindex = 3, i = 0
+
+M 7ff000384,4 hit setindex = 0, i = 1
+hit setindex = 0, i = 1
+
+
+ 7ff000384,4 hit setindex = 0, i = 1
+hit setindex = 0, i = 1
+
+
+ 400581,4 miss max_time_stamp = -10000000eviction setindex = 0, i = 0
+hit setindex = 0, i = 0
+
+L 7ff000384,4 hit setindex = 0, i = 1
+
+
+ 7ff000384,4 hit setindex = 0, i = 1
+
+
+ 400585,2 hit setindex = 0, i = 0
+
+
+ 400533,7 miss max_time_stamp = -10000000eviction setindex = 2, i = 0
+
+S 7ff000388,4 hit setindex = 1, i = 2
+
+
+ 7ff000388,4 hit setindex = 1, i = 2
+
+
+ 40053a,2 hit setindex = 3, i = 1
+
+
+ 400577,4 hit setindex = 2, i = 1
+
+L 7ff000388,4 hit setindex = 1, i = 2
+
+
+ 7ff000388,4 hit setindex = 1, i = 2
+
+
+ 40057b,2 hit setindex = 3, i = 0
+
+
+ 40053c,3 hit setindex = 3, i = 1
+
+L 7ff000384,4 hit setindex = 0, i = 1
+
+
+ 7ff000384,4 hit setindex = 0, i = 1
+
+
+ 40053f,2 hit setindex = 3, i = 1
+
+
+ 400541,4 hit setindex = 0, i = 3
+
+
+ 400545,3 hit setindex = 0, i = 3
+
+
+ 400548,4 hit setindex = 1, i = 3
+
+L 7ff000378,8 hit setindex = 3, i = 2
+
+
+ 7ff000378,8 hit setindex = 3, i = 2
+
+
+ 40054c,3 hit setindex = 1, i = 3
+
+L 7ff000388,4 hit setindex = 1, i = 2
+
+
+ 7ff000388,4 hit setindex = 1, i = 2
+
+
+ 40054f,2 hit setindex = 1, i = 3
+
+
+ 400551,3 hit setindex = 2, i = 2
+
+L 600a30,4 miss max_time_stamp = -10000000eviction setindex = 2, i = 0
+
+
+ 600a30,4 hit setindex = 2, i = 0
+
+
+ 400554,3 hit setindex = 2, i = 2
+
+S 7ff00038c,4 hit setindex = 1, i = 2
+
+
+ 7ff00038c,4 hit setindex = 1, i = 2
+
+
+ 400557,3 hit setindex = 2, i = 2
+
+L 7ff000388,4 hit setindex = 1, i = 2
+
+
+ 7ff000388,4 hit setindex = 1, i = 2
+
+
+ 40055a,2 hit setindex = 3, i = 3
+
+
+ 40055c,4 hit setindex = 3, i = 3
+
+
+ 400560,3 miss max_time_stamp = -10000000eviction setindex = 0, i = 0
+
+
+ 400563,4 hit setindex = 0, i = 0
+
+L 7ff000370,8 miss max_time_stamp = -10000000eviction setindex = 2, i = 0
+
+
+ 7ff000370,8 hit setindex = 2, i = 0
+
+
+ 400567,3 hit setindex = 0, i = 0
+
+
+ 400588,1 miss max_time_stamp = -10000000eviction setindex = 1, i = 0
+
+L 7ff000398,8 miss max_time_stamp = -10000000eviction setindex = 3, i = 0
+
+
+ 7ff000398,8 hit setindex = 3, i = 0
+
+hits:97 misses:24 evictions:8
