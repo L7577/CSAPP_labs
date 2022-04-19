@@ -10,14 +10,14 @@ Computer Systems: A Programmer's Perspective, 3/E (CS:APP3e)
 
 
 
-| lab_name         | write up                                                  | handout                                                      | solutions     | report |
-| ---------------- | --------------------------------------------------------- | ------------------------------------------------------------ | ------------- | ------ |
-| Data Lab         | [datalab.pdf](http://csapp.cs.cmu.edu/3e/datalab.pdf)     | [datalab.tar](http://csapp.cs.cmu.edu/3e/datalab-handout.tar) | bit.c         |        |
-| Bomb Lab         | [bomblab.pdf](http://csapp.cs.cmu.edu/3e/bomblab.pdf)     | [bomb.tar](http://csapp.cs.cmu.edu/3e/bomb.tar)              | solutions.txt |        |
-| Attach Lab       | [attachlab.pdf](http://csapp.cs.cmu.edu/3e/attacklab.pdf) | [target1.tar](http://csapp.cs.cmu.edu/3e/target1.tar)        |               |        |
-| Architecture Lab | [archlab.pdf](http://csapp.cs.cmu.edu/3e/archlab.pdf)     | [archlab.tar](http://csapp.cs.cmu.edu/3e/archlab-handout.tar) |               |        |
-| Cache Lab        | [cachelab.pdf](http://csapp.cs.cmu.edu/3e/cachelab.pdf)   | [cachelab.tar](http://csapp.cs.cmu.edu/3e/cachelab-handout.tar) |               |        |
-| Shell Lab        | [shlab.pdf](http://csapp.cs.cmu.edu/3e/shlab.pdf)         | [shlab.tar](http://csapp.cs.cmu.edu/3e/shlab-handout.tar)    |               |        |
-| Malloc Lab       | [malloclab.pdf](http://csapp.cs.cmu.edu/3e/malloclab.pdf) | [malloclab.tar](http://csapp.cs.cmu.edu/3e/malloclab-handout.tar) |               |        |
-| Proxy Lab        | [proxylab.pdf](http://csapp.cs.cmu.edu/3e/proxylab.pdf)   | [proxylab.tar](http://csapp.cs.cmu.edu/3e/proxylab-handout.tar) |               |        |
+| lab_name         | write up                                                  | handout                                                      | solutions                         | report                     |
+| ---------------- | --------------------------------------------------------- | ------------------------------------------------------------ | --------------------------------- | -------------------------- |
+| Data Lab         | [datalab.pdf](http://csapp.cs.cmu.edu/3e/datalab.pdf)     | [datalab.tar](http://csapp.cs.cmu.edu/3e/datalab-handout.tar) | [bit.c](./datalab-handout/bits.c) | [datalab.md](./datalab.md) |
+| Bomb Lab         | [bomblab.pdf](http://csapp.cs.cmu.edu/3e/bomblab.pdf)     | [bomb.tar](http://csapp.cs.cmu.edu/3e/bomb.tar)              | solutions.txt                     |                            |
+| Attach Lab       | [attachlab.pdf](http://csapp.cs.cmu.edu/3e/attacklab.pdf) | [target1.tar](http://csapp.cs.cmu.edu/3e/target1.tar)        |                                   |                            |
+| Architecture Lab | [archlab.pdf](http://csapp.cs.cmu.edu/3e/archlab.pdf)     | [archlab.tar](http://csapp.cs.cmu.edu/3e/archlab-handout.tar) |                                   |                            |
+| Cache Lab        | [cachelab.pdf](http://csapp.cs.cmu.edu/3e/cachelab.pdf)   | [cachelab.tar](http://csapp.cs.cmu.edu/3e/cachelab-handout.tar) |                                   |                            |
+| Shell Lab        | [shlab.pdf](http://csapp.cs.cmu.edu/3e/shlab.pdf)         | [shlab.tar](http://csapp.cs.cmu.edu/3e/shlab-handout.tar)    |                                   |                            |
+| Malloc Lab       | [malloclab.pdf](http://csapp.cs.cmu.edu/3e/malloclab.pdf) | [malloclab.tar](http://csapp.cs.cmu.edu/3e/malloclab-handout.tar) |                                   |                            |
+| Proxy Lab        | [proxylab.pdf](http://csapp.cs.cmu.edu/3e/proxylab.pdf)   | [proxylab.tar](http://csapp.cs.cmu.edu/3e/proxylab-handout.tar) |                                   |                            |
 
