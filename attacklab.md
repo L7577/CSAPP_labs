@@ -523,11 +523,12 @@ PASS: Would have posted the following:
 
 #### level 2
 
-
+与Part1 中的level目的相同，但方式不同，需要利用rtarget 中已有的汇编指令，相互组合构成攻击指令。
 
 
 
 ```assembly
+#一些可能有用的汇编指令
 0000000000401994 <start_farm>:
   401994:   b8 01 00 00 00          mov    $0x1,%eax
   401999:   c3                      retq
@@ -572,7 +573,7 @@ PASS: Would have posted the following:
 
 
 
-如果我们需要插入数值，就需要`popq`指令，将数值存入到响应的寄存器中，查看实验说明文档提供的表格，字节码在`58~5f`之间，由于`ROP`策略，后续一定要有一个`ret`指令，对应字节码是`c3`，`nop`指令对应字节码是`90`
+若是要插入数值，就需要`popq`指令，将数值存入到响应的寄存器中，查看实验说明文档提供的表格，字节码在`58~5f`之间，由于`ROP`策略，后续一定要有一个`ret`指令，对应字节码是`c3`，`nop`指令对应字节码是`90`
 
 参考实验手册http://csapp.cs.cmu.edu/3e/attacklab.pdf
 
