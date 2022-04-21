@@ -54,7 +54,36 @@ CSAPP:http://csapp.cs.cmu.edu/3e/labs.html
 
 ```
 
+在eval函数中，首先要判断读入的命令是不是内置命令，
 
+一些注意事项
+
+在fork子进程之前需要阻塞信号，fork之后，execve命令之前则要恢复。
+
+```c
+/* block SIGCHLD SIGINT SIGTSTP ,and save current signal mask */  
+if(sigprocmask(SIG_BLOCK,&mask_one,&prev_one) < 0)
+    unix_error("SIG_BLOCK error"); 
+
+if ((pid = fork()) == 0) {   /* Child runs user job */
+    /* reset signal mask which  unblock signal */
+    if (sigprocmask(SIG_SETMASK,&prev_one,NULL) < 0)
+        unix_error("SIG_SETMASK error");  
+
+    if(setpgid(0,0) < 0){
+        unix_error("setpgid error");
+    } 
+
+    if (execve(argv[0], argv, environ) < 0) {
+        printf("%s: Command not found.\n", argv[0]);
+        exit(0);
+    }
+}
+```
+
+
+
+同样在addjob 之前需要阻塞信号，添加完成以后恢复。若是前台作业，还需要在添加完之后，等待作业完成。
 
 
 
@@ -68,9 +97,9 @@ CSAPP:http://csapp.cs.cmu.edu/3e/labs.html
  */
 ```
 
+builtin_cmd则需要判断并处理 `quit` `jobs` `bg` `fg` 这四个内置命令
 
-
-
+可以使用`strcmp`
 
 
 
@@ -83,7 +112,9 @@ CSAPP:http://csapp.cs.cmu.edu/3e/labs.html
 
 
 
+do_bgfg就是分析输入的内置命令，是否正确，如果正确则正常执行
 
+注意如果是前台作业，需要等待任务执行结束。
 
 
 
@@ -95,6 +126,14 @@ CSAPP:http://csapp.cs.cmu.edu/3e/labs.html
  * waitfg - Block until process pid is no longer the foreground process
  */
 ```
+
+waitfg 主要用来等待前台任务执行结束，
+
+需要明白一个进程执行结束时，kernel会发出一个SIGCHLD信号，如何保证前台只有一个任务进行，并且不会影响后台进程运行。值得思考
+
+实验报告中，推荐使用简单粗暴的忙等待方式，也就是sleep()，还能如何改进呢
+
+使用`sigsuspend`
 
 
 
@@ -111,7 +150,9 @@ CSAPP:http://csapp.cs.cmu.edu/3e/labs.html
  */
 ```
 
+sigchld_handler 在收到SIGCHID信号时进行工作，主要负责删除执行完成以及被终止的作业，
 
+需要注意在delete_job时，也要阻塞各种信号。保证命令不可中断。
 
 
 
@@ -125,7 +166,7 @@ CSAPP:http://csapp.cs.cmu.edu/3e/labs.html
 
 ```
 
-
+sigint_handler 函数在捕捉到SIGINT信号时，发送SIGINT信号到当前前台任务，使其终止。
 
 
 
@@ -139,7 +180,7 @@ CSAPP:http://csapp.cs.cmu.edu/3e/labs.html
 
 ```
 
-
+sigtstp_handler 函数在捕捉到SIGTSTP信号时，发送给当前前台任务，使其中止，然后挂起该任务。
 
 
 
