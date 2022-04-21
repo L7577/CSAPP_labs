@@ -12,6 +12,7 @@ CSAPP:http://csapp.cs.cmu.edu/3e/labs.html
 - [Exely-cachelab笔记](https://github.com/Exely/CSAPP-Labs/blob/master/notes/cachelab.md)
 - https://github.com/TsundereChen/csapp-cache-lab
 - https://zhuanlan.zhihu.com/p/79058089
+- [CSAPP - Cache Lab的更(最)优秀的解法](https://zhuanlan.zhihu.com/p/387662272)
 
 
 
@@ -113,6 +114,12 @@ cache大小是变化的，需要动态申请内存，使用`malloc`
 
 读入trace文件，使用`fscanf` 或者 `sscanf`
 
+```c
+while(fscanf(tracefile," %c %lx,%d",&operation,&address,&size)>0){
+    ...
+}
+```
+
 
 
 计算 标志位 索引位 
@@ -126,6 +133,64 @@ cache大小是变化的，需要动态申请内存，使用`malloc`
 
 异常处理，访问cache缺失，写入cache空行,或者 替换？
 
+```c
+// hit 
+for (int i = 0; i < lineperset; i++){
+    if ( cache[setindex][i].tag == tag && cache[setindex][i].valid == 1 ){
+        cache[setindex][i].time_stamp = count;
+        hit_count++;
+        hit_flag = true;
+        miss_flag = false;
+        if(verbose){
+            printf(" hit ");
+        }
+        break;
+    }
+}
+// if miss , then storage
+if (miss_flag){
+    miss_count++;
+    if (verbose)
+        printf(" miss ");
+    for (int i = 0; i < lineperset; i++){
+        if ( cache[setindex][i].valid == -1 ){
+            cache[setindex][i].valid = 1;
+            cache[setindex][i].tag = tag;
+            cache[setindex][i].time_stamp = count;
+            eviction_flag = false;
+            hit_flag = true;
+            break;
+        }
+    }
+    // if miss and the cacheset is full , then eviction , use lru .
+    if (eviction_flag){
+        for(int i = 0; i < lineperset; i++){
+            if (cache[setindex][i].time_stamp < max_time_stamp){
+                max_time_stamp = cache[setindex][i].time_stamp;
+                max_time_stamp_index = i;
+            }
+        }
+        eviction_count++;
+        hit_flag = true;
+        if (verbose) {
+            printf ("eviction ");
+        }
+        // update old cache[][] tag and time_stamp
+        cache[setindex][max_time_stamp_index].tag = tag;
+        cache[setindex][max_time_stamp_index].time_stamp = count;
+    }
+}
+if (fetch_count == 2 && hit_flag ){
+    hit_count++;
+    if(verbose)
+        printf("hit ");
+}  
+if (verbose)
+    printf("\n");
+```
+
+
+
 
 
 
@@ -135,6 +200,74 @@ cache大小是变化的，需要动态申请内存，使用`malloc`
 分块技术
 
 http://csapp.cs.cmu.edu/3e/waside/waside-blocking.pdf
+
+
+
+完善trans.c文件
+
+ 
+
+32*32
+
+最简单的分块方式，但是只cache缺失也有343，没有达到及格要求。
+
+```c
+/*  cache : s: 5 E: 1 b: 5 
+    S = 2^5=32 , E = 1;  Blockoffset 2^5=32 sizeof(int)=4  
+    per line : 32 / 4 = 8 
+    */
+
+/*  32*32 bsize=8  misses: 343 */
+for (kk = 0; kk < N; kk += bsize) {
+    for (jj = 0; jj < M; jj += bsize) {
+        for (k = kk; k < (kk + bsize); k++){
+            for (j = 0; j < bsize; j++){
+                int tmp = A[k][jj+j];
+                B[jj+j][k] = tmp;
+            }
+        }
+    }
+}
+```
+
+
+
+增加局部变量，
+
+```c
+   // 32*32 misses: 287
+    for (kk = 0; kk < N; kk += bsize) {
+        for (jj = 0; jj < M; jj += bsize) {
+            for (k = kk; k < (kk + bsize); k++){
+                    int t1 = A[k][jj];
+                    int t2 = A[k][jj+1];
+                    int t3 = A[k][jj+2];
+                    int t4 = A[k][jj+3];
+                    int t5 = A[k][jj+4];
+                    int t6 = A[k][jj+5];
+                    int t7 = A[k][jj+6];
+                    int t8 = A[k][jj+7];
+
+                    B[jj][k] = t1;
+                    B[jj+1][k] = t2;
+                    B[jj+2][k] = t3;
+                    B[jj+3][k] = t4;
+                    B[jj+4][k] = t5;
+                    B[jj+5][k] = t6;
+                    B[jj+6][k] = t7;
+                    B[jj+7][k] = t8;
+            }
+        }
+    }
+```
+
+
+
+64*64 
+
+
+
+待更新
 
 
 
