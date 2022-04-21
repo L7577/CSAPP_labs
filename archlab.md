@@ -661,6 +661,67 @@ ISA Check Succeeds
 
 
 
+```shell
+# 使用 benchmark 测试
+make testssim
+../seq/ssim -t asum.yo > asum.seq
+../seq/ssim -t asumr.yo > asumr.seq
+../seq/ssim -t cjr.yo > cjr.seq
+../seq/ssim -t j-cc.yo > j-cc.seq
+../seq/ssim -t poptest.yo > poptest.seq
+../seq/ssim -t pushquestion.yo > pushquestion.seq
+../seq/ssim -t pushtest.yo > pushtest.seq
+../seq/ssim -t prog1.yo > prog1.seq
+../seq/ssim -t prog2.yo > prog2.seq
+../seq/ssim -t prog3.yo > prog3.seq
+../seq/ssim -t prog4.yo > prog4.seq
+../seq/ssim -t prog5.yo > prog5.seq
+../seq/ssim -t prog6.yo > prog6.seq
+../seq/ssim -t prog7.yo > prog7.seq
+../seq/ssim -t prog8.yo > prog8.seq
+../seq/ssim -t ret-hazard.yo > ret-hazard.seq
+grep "ISA Check" *.seq
+asum.seq:ISA Check Succeeds
+asumr.seq:ISA Check Succeeds
+cjr.seq:ISA Check Succeeds
+j-cc.seq:ISA Check Succeeds
+poptest.seq:ISA Check Succeeds
+prog1.seq:ISA Check Succeeds
+prog2.seq:ISA Check Succeeds
+prog3.seq:ISA Check Succeeds
+prog4.seq:ISA Check Succeeds
+prog5.seq:ISA Check Succeeds
+prog6.seq:ISA Check Succeeds
+prog7.seq:ISA Check Succeeds
+prog8.seq:ISA Check Succeeds
+pushquestion.seq:ISA Check Succeeds
+pushtest.seq:ISA Check Succeeds
+ret-hazard.seq:ISA Check Succeeds
+rm asum.seq asumr.seq cjr.seq j-cc.seq poptest.seq pushquestion.seq pushtest.seq prog1.seq prog2.seq prog3.seq prog4.seq prog5.seq prog6.seq prog7.seq prog8.seq ret-hazard.seq
+
+```
+
+
+
+```sh
+# 回归测试
+make SIM=../seq/ssim TFLAGS=-i
+./optest.pl -s ../seq/ssim -i
+Simulating with ../seq/ssim
+  All 58 ISA Checks Succeed
+./jtest.pl -s ../seq/ssim -i
+Simulating with ../seq/ssim
+  All 96 ISA Checks Succeed
+./ctest.pl -s ../seq/ssim -i
+Simulating with ../seq/ssim
+  All 22 ISA Checks Succeed
+./htest.pl -s ../seq/ssim -i
+Simulating with ../seq/ssim
+  All 756 ISA Checks Succeed
+```
+
 
 
 ### Part C
+
+待更新
