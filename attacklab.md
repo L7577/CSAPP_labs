@@ -8,6 +8,7 @@ CSAPP:http://csapp.cs.cmu.edu/3e/labs.html
 
 参考：
 
+- [III Attack Lab - 漏洞是如何被攻击的](http://wdxtub.com/csapp/thick-csapp-lab-3/2016/04/16/)
 - [Exely-attach lab笔记](https://github.com/Exely/CSAPP-Labs/blob/master/notes/attack.md)
 
 
