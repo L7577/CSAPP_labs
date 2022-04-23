@@ -83,10 +83,10 @@ void cachesim(int argc,char **argv)
 
     int setsize = 1 << setindexbit; // S = 2^s
     Cache cache;
-    cache = malloc(setsize * sizeof(Cache));
+    cache = (Cache)malloc(setsize * sizeof(Cache));
     //initialize cache[S][E];
     for(int i = 0; i < setsize; i++){
-        cache[i] = malloc(lineperset * sizeof(struct cache_line));
+        cache[i] = (CacheLine)malloc(lineperset * sizeof(struct cache_line));
         for(int j = 0; j < lineperset; j++){
             cache[i][j].valid = -1;
             cache[i][j].tag = -1;
