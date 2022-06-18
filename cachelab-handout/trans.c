@@ -31,7 +31,8 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N])
     per line : 32 / 4 = 8 
     */
 
-    /*  32*32 bsize=8  misses: 343 
+    //  32*32 bsize=8  misses: 343 
+    /*
     for (kk = 0; kk < N; kk += bsize) {
         for (jj = 0; jj < M; jj += bsize) {
             for (k = kk; k < (kk + bsize); k++){
@@ -64,7 +65,7 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N])
                     B[jj+4][k] = t5;
                     B[jj+5][k] = t6;
                     B[jj+6][k] = t7;
-                    B[jj+7][k] = t8;
+                   B[jj+7][k] = t8;
             }
         }
     }
