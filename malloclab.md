@@ -4,9 +4,25 @@ CSAPP:http://csapp.cs.cmu.edu/3e/labs.html
 
 [*Malloc Lab*](http://csapp.cs.cmu.edu/im/labs/malloclab.tar) *[Updated 9/2/14]* ([README](http://csapp.cs.cmu.edu/3e/README-malloclab), [Writeup](http://csapp.cs.cmu.edu/3e/malloclab.pdf), [Release Notes](http://csapp.cs.cmu.edu/3e/malloclab-release.html), [Self-Study Handout](http://csapp.cs.cmu.edu/3e/malloclab-handout.tar))
 
+---
 
+相关课程资料参考[15-213/14-513/15-513: Intro to Computer Systems, Spring 2022-Schedule](https://www.cs.cmu.edu/afs/cs/academic/class/15213-s22/www/schedule.html)
 
+ Dynamic Memory Allocation: Basic ([pptx](https://www.cs.cmu.edu/afs/cs/academic/class/15213-s22/www/lectures/13-malloc-basic.pptx), [pdf](https://www.cs.cmu.edu/afs/cs/academic/class/15213-s22/www/lectures/13-malloc-basic.pdf), [video 15213](https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=2c811af2-bc64-4c7d-be2d-ae4b014ecf3a), [video 14513](https://ece.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=a6c21c9a-360f-48ae-9ebc-ae4b01535fe6&start=0))
 
+Dynamic Memory Allocation: Advanced ([pptx](https://www.cs.cmu.edu/afs/cs/academic/class/15213-s22/www/lectures/14-malloc-advanced.pptx), [pdf](https://www.cs.cmu.edu/afs/cs/academic/class/15213-s22/www/lectures/14-malloc-advanced.pdf), [video 15213](https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=3e33e9b8-1365-41d2-aed2-ae4d01520c4b), [video 14513](https://ece.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=61fd3acc-f4e7-4cff-9e7b-ae4d0151dc79&start=0)
+
+*Recitation 8: Malloc lab (Part I)* ([slides](https://www.cs.cmu.edu/afs/cs/academic/class/15213-s22/www/recitations/rec08_slides.pdf))
+
+Linking ([pptx](https://www.cs.cmu.edu/afs/cs/academic/class/15213-s22/www/lectures/15-linking.pptx), [pdf](https://www.cs.cmu.edu/afs/cs/academic/class/15213-s22/www/lectures/15-linking.pdf), [video 15213](https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=81e76000-0215-492a-85b3-ae590141c39d), [video 14513](https://ece.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=fea6c726-0f1d-4812-884d-ae590140d746))
+
+Virtual Memory: Concepts ([pptx](https://www.cs.cmu.edu/afs/cs/academic/class/15213-s22/www/lectures/16-vm-concepts.pptx), [pdf](https://www.cs.cmu.edu/afs/cs/academic/class/15213-s22/www/lectures/16-vm-concepts.pdf), [video 15213](https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=f5cb944b-879b-4cba-a2e6-ae5b0137b26d), [video 14513](https://ece.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=36c29c5e-1e57-41ab-8f00-ae5b01448f70))
+
+**Bootcamp 5: Malloc** ([slides](https://www.cs.cmu.edu/afs/cs/academic/class/15213-s22/www/bootcamps/mallocbootcamp.pdf))
+
+*Recitation 9: Malloc lab (Part II)* ([slides](https://www.cs.cmu.edu/afs/cs/academic/class/15213-s22/www/recitations/rec09_slides.pdf), [tar](https://www.cs.cmu.edu/afs/cs/academic/class/15213-s22/www/activities/rec9.tar))
+
+---
 
 
 
