@@ -4,14 +4,21 @@ CSAPP:http://csapp.cs.cmu.edu/3e/labs.html
 
 [*Bomb Lab*](http://csapp.cs.cmu.edu/im/labs/bomblab.tar) *[Updated 1/12/16]* ([README](http://csapp.cs.cmu.edu/3e/README-bomblab), [Writeup](http://csapp.cs.cmu.edu/3e/bomblab.pdf), [Release Notes](http://csapp.cs.cmu.edu/3e/bomblab-release.html), [Self-Study Handout](http://csapp.cs.cmu.edu/3e/bomb.tar))
 
+---
 
+相关课程资料[ 15-213/15-513: Introduction to Computer Systems (ICS)Summer 2022](http://www.cs.cmu.edu/~213/index.html)
 
-参考：
+Machine Prog: Basics ([activity](http://www.cs.cmu.edu/~213/activities/213_lecture5.pdf), [activity tar](http://www.cs.cmu.edu/~213/activities/lec5.tar), [activity-sol](http://www.cs.cmu.edu/~213/activities/213_lecture5-sol.pdf), [pdf](http://www.cs.cmu.edu/~213/lectures/05-machine-basics.pdf), [code](http://www.cs.cmu.edu/~213/code/05-machine-basics), [video](https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=b98c6535-d003-4ea5-8568-ae2a0158cc32))
 
-- [II Bomb Lab - 汇编，栈帧与 gdb](http://wdxtub.com/csapp/thick-csapp-lab-2/2016/04/16/)
-- [Exely CSAPP-lab bomb lab笔记](https://github.com/Exely/CSAPP-Labs/blob/master/notes/bomb.md)
+Machine Prog: Control ([activity](http://www.cs.cmu.edu/~213/activities/213_lecture6.pdf), [activity tar](http://www.cs.cmu.edu/~213/activities/lec6.tar), [activity-sol](http://www.cs.cmu.edu/~213/activities/213_lecture6-sol.pdf), [pdf](http://www.cs.cmu.edu/~213/lectures/06-machine-control.pdf), [code](http://www.cs.cmu.edu/~213/code/06-machine-control), [video](https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=d68a8cde-12e3-4fbf-9226-ae2f0148e73a))
 
+Bomblab/GDB Bootcamp([pdf](http://www.cs.cmu.edu/~213/recitations/recitation03-bomblab.pdf), [video](https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=a7549e34-722f-4645-9a69-ad3d0141c6ff))
 
+Machine Prog: Procedures ([activity](http://www.cs.cmu.edu/~213/activities/213_lecture7.pdf), [activity tar](http://www.cs.cmu.edu/~213/activities/lec7.tar), [activity-sol](http://www.cs.cmu.edu/~213/activities/213_lecture7-sol.pdf), [pdf](http://www.cs.cmu.edu/~213/lectures/07-machine-procedures.pdf), [code](http://www.cs.cmu.edu/~213/code/07-machine-procedures), [video](https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=bff75c99-37ad-42fa-98df-ae31014d20b0))
+
+Machine Prog: Data ([activity](http://www.cs.cmu.edu/~213/activities/213_lecture8.pdf), [activity tar](http://www.cs.cmu.edu/~213/activities/lec8.tar), [activity-sol](http://www.cs.cmu.edu/~213/activities/213_lecture8-sol.pdf), [pdf](http://www.cs.cmu.edu/~213/lectures/08-machine-data.pdf), [code](http://www.cs.cmu.edu/~213/code/08-machine-data), [video](https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=d68c41a2-ae7b-4c18-af3d-ae36014a1f40))
+
+---
 
 做实验前须阅读实验说明文档[bomblab.pdf](http://csapp.cs.cmu.edu/3e/bomblab.pdf)
 
@@ -32,8 +39,6 @@ http://csapp.cs.cmu.edu/2e/docs/gdbnotes-x86-64.txt
 
 
 **需了解汇编语言**
-
-
 
 [Intel 64 and IA-32 Architectures Software Developer's Manuals](http://www.intel.com/products/processor/manuals/)
 
@@ -265,7 +270,7 @@ End of assembler dump.
 
 
 
-查看phase_2函数对应的汇编代码，可以看到调用了一个函数 `read_six_numbers`，很明显这是要读取6个数字，，并且使用了sscanf函数读取，
+查看phase_2函数对应的汇编代码，可以看到调用了一个函数 `read_six_numbers`，很明显这是要读取6个数字，，并且使用了sscanf函数读取
 
 ```assembly
 Dump of assembler code for function read_six_numbers:
@@ -743,11 +748,11 @@ Dump of assembler code for function phase_6:
    0x0000000000401114 <+32>:	mov    %r13,%rbp # %rbp = %r13
    0x0000000000401117 <+35>:	mov    0x0(%r13),%eax
    0x000000000040111b <+39>:	sub    $0x1,%eax # %eax - 1
-   0x000000000040111e <+42>:	cmp    $0x5,%eax # %eax - 5
+   0x000000000040111e <+42>:	cmp    $0x5,%eax # 比较是否等于5
    0x0000000000401121 <+45>:	jbe    0x401128 <phase_6+52> #相等就跳转到 +52
    0x0000000000401123 <+47>:	callq  0x40143a <explode_bomb>
    0x0000000000401128 <+52>:	add    $0x1,%r12d #　% r12d+1
-   0x000000000040112c <+56>:	cmp    $0x6,%r12d  # 比较
+   0x000000000040112c <+56>:	cmp    $0x6,%r12d  # 比较是否等于6
    0x0000000000401130 <+60>:	je     0x401153 <phase_6+95> 0#相等就跳转 +95，进入下一个循环
    0x0000000000401132 <+62>:	mov    %r12d,%ebx # %ebx = %r12d
    0x0000000000401135 <+65>:	movslq %ebx,%rax # %rax = %ebx
@@ -789,7 +794,7 @@ Dump of assembler code for function phase_6:
    0x0000000000401183 <+143>:	mov    $0x6032d0,%edx  #%edx = $0x6032d0
    0x0000000000401188 <+148>:	mov    %rdx,0x20(%rsp,%rsi,2) # 将%rdx的值存到栈中，
    0x000000000040118d <+153>:	add    $0x4,%rsi # %rsi + 4
-   0x0000000000401191 <+157>:	cmp    $0x18,%rsi # 比较 %rsi 24
+   0x0000000000401191 <+157>:	cmp    $0x18,%rsi # 比较 %rsi 与 24
    0x0000000000401195 <+161>:	je     0x4011ab <phase_6+183>
    0x0000000000401197 <+163>:	mov    (%rsp,%rsi,1),%ecx # ecx = %rsp + %rsi*1
    0x000000000040119a <+166>:	cmp    $0x1,%ecx # 比较%ecx是否为1
