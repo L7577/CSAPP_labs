@@ -6,13 +6,11 @@ CSAPP:http://csapp.cs.cmu.edu/3e/labs.html
 
 ---
 
-相关课程参考：[15-213/15-513: Introduction to Computer Systems (ICS)-Summer 2022](http://www.cs.cmu.edu/~213/index.html)
+相关课程资料[15-213/15-513: Introduction to Computer Systems (ICS)-Summer 2022](http://www.cs.cmu.edu/~213/index.html)
 
 Machine Prog: Advanced ([activity](http://www.cs.cmu.edu/~213/activities/213_lecture9.pdf), [activity-sol](http://www.cs.cmu.edu/~213/activities/213_lecture9-sol.pdf), [pdf](http://www.cs.cmu.edu/~213/lectures/09-machine-advanced.pdf), [code](http://www.cs.cmu.edu/~213/code/09-machine-advanced), [video](https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=d0cc9747-41de-48cf-99d4-ae38014b73da))
 
 Attacklab Bootcamp ([activity](http://www.cs.cmu.edu/~213/activities/attacklab-bootcamp-activity.pdf), [pdf](http://www.cs.cmu.edu/~213/lectures/attacklab-bootcamp.pdf), [video](https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=d0867185-68a5-4b14-8c57-ad48013ab02f))
-
-
 
 ---
 
