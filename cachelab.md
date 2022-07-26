@@ -4,31 +4,33 @@ CSAPP:http://csapp.cs.cmu.edu/3e/labs.html
 
 [*Cache Lab*](http://csapp.cs.cmu.edu/im/labs/cachelab.tar) **[Updated 5/2/16]** ([README](http://csapp.cs.cmu.edu/3e/README-cachelab), [Writeup](http://csapp.cs.cmu.edu/3e/cachelab.pdf), [Release Notes](http://csapp.cs.cmu.edu/3e/cachelab-release.html), [Self-Study Handout](http://csapp.cs.cmu.edu/3e/cachelab-handout.tar))
 
+---
 
+相关课程资料[15-213/15-513: Introduction to Computer Systems (ICS)
+Summer 2022](http://www.cs.cmu.edu/~213/index.html)
+
+The Memory Hierarchy ([activity](http://www.cs.cmu.edu/~213/activities/213_lecture10.pdf), [activity-sol](http://www.cs.cmu.edu/~213/activities/213_lecture10-sol.pdf), [pdf](http://www.cs.cmu.edu/~213/lectures/10-memory-hierarchy.pdf), [video](https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=d0f67315-458a-4d6d-b113-ae3d014a98ed))
+
+Cache Memories ([activity](http://www.cs.cmu.edu/~213/activities/213_lecture12.pdf), [activity-sol](http://www.cs.cmu.edu/~213/activities/213_lecture12-sol.pdf), [pdf](http://www.cs.cmu.edu/~213/lectures/12-cache-memories.pdf), [video](https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=c53132d7-cecd-4d09-9fe7-ae3f0150d14e))
+
+C Bootcamp ([tar](http://www.cs.cmu.edu/~213/activities/cbootcamp.tar.gz), [pdf](http://www.cs.cmu.edu/~213/lectures/cbootcamp-m22.pdf), [video](https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=b63440c4-4d60-413d-85eb-ad4f017bf090)) 
+
+---
 
 参考：
 
-- [IV Cache Lab - 实现一个缓存系统来加速计算](http://wdxtub.com/csapp/thick-csapp-lab-4/2016/04/16/)
-- [Exely-cachelab笔记](https://github.com/Exely/CSAPP-Labs/blob/master/notes/cachelab.md)
-- https://github.com/TsundereChen/csapp-cache-lab
 - https://zhuanlan.zhihu.com/p/79058089
 - [CSAPP - Cache Lab的更(最)优秀的解法](https://zhuanlan.zhihu.com/p/387662272)
-
-
 
 做实验前阅读 http://csapp.cs.cmu.edu/3e/README-cachelab
 
 实验说明：http://csapp.cs.cmu.edu/3e/cachelab.pdf
 
-15-213课程资料：https://www.cs.cmu.edu/~213/recitations/rec06_slides.pdf
-
 对应CS:APP 第6章节
 
 用到的工具 `valgrind` `malloc` `gdb`
 
-
-
-### Part A 
+### Part A
 
 本部分是实现一个缓存模拟器，完善csim.c文件。
 
@@ -48,10 +50,7 @@ Options:
 Examples:
   linux>  ./csim-ref -s 4 -E 1 -b 4 -t traces/yi.trace
   linux>  ./csim-ref -v -s 8 -E 2 -b 4 -t traces/yi.trace
-
 ```
-
-
 
 如何实现一个模拟缓存系统，
 
@@ -61,25 +60,23 @@ Examples:
 - 异常处理（缺失、如何替换）
 - 输出结果（两种输出模式）
 
-
-
 如何读取参数，可以使用`getopt` ，可参考https://www.gnu.org/software/libc/manual/html_node/Example-of-Getopt.html 或 使用 `man getopt`
-
-
 
 如何创建cache模拟器
 
 根据读入的参数
 
-```
+
+
+```c
   -s <num>   Number of set index bits.
   -E <num>   Number of lines per set.
   -b <num>   Number of block offset bits.
-  
+
   S = 2^s
   创建一个二维数组
   cache[S][E]
-  
+
 // 定义cacheline数据结构
 typedef struct cache_line *CacheLine;
 struct cache_line
@@ -91,17 +88,15 @@ struct cache_line
 typedef  CacheLine * Cache;
 ```
 
-
-
 cache大小是变化的，需要动态申请内存，使用`malloc`
 
 ```c
     int setsize = 1 << setindexbit; // S = 2^s
     Cache cache;
-    cache = malloc(setsize * sizeof(Cache));
+    cache = (Cache)malloc(setsize * sizeof(Cache));
     //initialize cache[S][E];
     for(int i = 0; i < setsize; i++){
-        cache[i] = malloc(lineperset * sizeof(struct cache_line));
+        cache[i] = (CacheLine)malloc(lineperset * sizeof(struct cache_line));
         for(int j = 0; j < lineperset; j++){
             cache[i][j].valid = -1;
             cache[i][j].tag = -1;
@@ -109,8 +104,6 @@ cache大小是变化的，需要动态申请内存，使用`malloc`
         }
     }
 ```
-
-
 
 读入trace文件，使用`fscanf` 或者 `sscanf`
 
@@ -120,16 +113,12 @@ while(fscanf(tracefile," %c %lx,%d",&operation,&address,&size)>0){
 }
 ```
 
-
-
 计算 标志位 索引位 
 
 ```c
     int setindex = (address >> blockoffset) & ((-1U) >> (64 - setindexbit));
     int tag = address >> (setindexbit + blockoffset);
 ```
-
-
 
 异常处理，访问cache缺失，写入cache空行,或者 替换？
 
@@ -189,8 +178,6 @@ if (verbose)
     printf("\n");
 ```
 
-
-
 测试
 
 ```shell
@@ -209,21 +196,13 @@ Points (s,E,b)    Hits  Misses  Evicts    Hits  Misses  Evicts
     27
 ```
 
-
-
-
-
 ### Part B
 
 分块技术
 
 http://csapp.cs.cmu.edu/3e/waside/waside-blocking.pdf
 
-
-
 完善trans.c文件
-
- 
 
 32*32
 
@@ -248,9 +227,7 @@ for (kk = 0; kk < N; kk += bsize) {
 }
 ```
 
-
-
-增加局部变量，
+增加局部变量，miss次数降到了287
 
 ```c
    // 32*32 misses: 287
@@ -279,19 +256,6 @@ for (kk = 0; kk < N; kk += bsize) {
     }
 ```
 
-
-
 64*64 
 
-
-
 待更新
-
-
-
-
-
-
-
-
-
