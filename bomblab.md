@@ -54,7 +54,7 @@ gdb bomb
 gdb -tui bomb
 ```
 
-可以从bomb.c程序中看出，一共有6个phase函数，也就是分别对应的6个炸弹，需要输入正确的对应的字符串才能拆除也就是正常继续运行程序，负责就会爆炸 bomb~ !!!，当然最后还有提示，有一个隐藏的炸弹很可能被忽视了。
+可以从bomb.c程序中看出，一共有6个phase函数，也就是分别对应的6个炸弹，需要输入正确的字符串才能拆除也就是正常继续运行程序，负责就会爆炸 bomb~ !!!，当然最后还有提示，有一个隐藏的炸弹很可能被忽视了。
 
 ```sh
 #也可以对bomb程序反汇编，观察一下
@@ -91,106 +91,16 @@ Dump of assembler code for function phase_1:
 End of assembler dump.
 ```
 
-观察一下，phase_1函数到底在做什么，读入一串字符（对应上面随便输入的字符串），调用strings_not_equal函数进行判断，如果相等就跳转到phase_1+0x17 处，也就是下面的 `add $0x8,%rsp`指令。不相等就调用爆炸函数，explode_bomb。判断字符串相等，就意味着，需要找到函数中，已经给出的字符串。到底存储在哪里呢？先找到刚才自己输入的字符串存在哪里，继续gdb调试观察
+观察一下phase_1函数到底在做什么，调用strings_not_equal函数判断输入的字符串和原有字符串是否相等，如果相等就跳转到phase_1+0x23 处，否则就调用爆炸函数explode_bomb。判断字符串相等，就需要找到函数中已经给出的字符串，到底存储在哪里呢？**0x402400** 这个地址很明显！查看`0x402400`处存储的到底是什么
 
 ```sh
-(gdb)info r  #查看寄存器状态
-rax            0x603780    6305664
-rbx            0x0    0
-rcx            0x4    4
-rdx            0x1    1
-rsi            0x603780    6305664
-rdi            0x603780    6305664
-rbp            0x402210    0x402210 <__libc_csu_init>
-rsp            0x7fffffffde98    0x7fffffffde98
-r8             0x604425    6308901
-r9             0x7ffff7fdb700    140737353987840
-r10            0x519    1305
-r11            0x7ffff7a3b100    140737348088064
-r12            0x400c90    4197520
-r13            0x7fffffffdf80    140737488347008
-r14            0x0    0
-r15            0x0    0
-rip            0x400ee0    0x400ee0 <phase_1>
-eflags         0x202    [ IF ]
-cs             0x33    51
-ss             0x2b    43
-ds             0x0    0
-es             0x0    0
-fs             0x0    0
-gs             0x0    0
+(gdb) x /s 0x402400
+0x402400:       "Border relations with Canada have never been better."
 ```
 
-rax寄存器一般存着返回值，打印其中的值
+所以第一个关卡的答案就是 "Border relations with Canada have never been better."
 
-```sh
-(gdb)p $rax
-$2 = 6305664
-(gdb) x/s $rax
-0x603780 <input_strings>:    "\\123"
-```
-
-可以看到rax寄存器中存着刚才随便输入的 `123`
-
-需要继续运行程序才能继续寻找原有的字符串
-
-```sh
-(gdb) x /s $esi
-0x603780 <input_strings>:    "123"
-(gdb) si
-0x0000000000400ee9 in phase_1 ()
-(gdb) disas
-Dump of assembler code for function phase_1:
-   0x0000000000400ee0 <+0>:    sub    $0x8,%rsp
-   0x0000000000400ee4 <+4>:    mov    $0x402400,%esi
-=> 0x0000000000400ee9 <+9>:    callq  0x401338 <strings_not_equal>
-   0x0000000000400eee <+14>:    test   %eax,%eax
-   0x0000000000400ef0 <+16>:    je     0x400ef7 <phase_1+23>
-   0x0000000000400ef2 <+18>:    callq  0x40143a <explode_bomb>
-   0x0000000000400ef7 <+23>:    add    $0x8,%rsp
-   0x0000000000400efb <+27>:    retq   
-End of assembler dump.
-(gdb) x /s $esi
-0x402400:    "Border relations with Canada have never been better."
-
-(gdb) x /s $rdi
-0x603780 <input_strings>:    "123"
-(gdb) x /s $rsi
-0x402400:    "Border relations with Canada have never been better."
-
-#此时的寄存器状态
-(gdb) info reg
-rax            0x603780    6305664
-rbx            0x0    0
-rcx            0x3    3
-rdx            0x1    1
-rsi            0x402400    4203520
-rdi            0x603780    6305664
-rbp            0x402210    0x402210 <__libc_csu_init>
-rsp            0x7fffffffde90    0x7fffffffde90
-r8             0x604424    6308900
-r9             0x7ffff7fdb700    140737353987840
-r10            0x519    1305
-r11            0x7ffff7a3b100    140737348088064
-r12            0x400c90    4197520
-r13            0x7fffffffdf80    140737488347008
-r14            0x0    0
-r15            0x0    0
-rip            0x400ee9    0x400ee9 <phase_1+9>
-eflags         0x206    [ PF IF ]
-cs             0x33    51
-ss             0x2b    43
-ds             0x0    0
-es             0x0    0
-fs             0x0    0
-gs             0x0    0
-```
-
-其实就是去查看`0x402400`处存储的字符串到底是什么，通过`mov`指令后，该字符串所在的地址被存储到`esi`，也就是`rsi`寄存器中的地位，作为后面函数调用时的第二个参数，也就可以通过`x/s $esi`指令打印出来，程序运行到`strings_not_equal`函数，此时输入的字符串和原有的字符串，作为函数的两个参数。
-
-所以第一个问题的答案就是 "Border relations with Canada have never been better."
-
-退出gdb，新建一个文档，用于存储答案，后续就可以指定文件做运行时参数
+退出gdb，新建一个文档，用于记录答案，后续就可以指定文件做运行时参数
 
 ```sh
 touch solutions.txt
@@ -302,9 +212,11 @@ End of assembler dump.
    0x0000000000400f41 <+69>:    pop    %rbp
 ```
 
-*上面注释中第一个数和第二个数是相对关系，类比成当前数与下一个数*
+*上面注释中第一个数和第二个数是相对关系，类比成当前一个数与下一个数*
 
 分析发现第一个数一定为1，且下一个数是前一个数的2倍，所以这6个数为: `1 2 4 8 16 32`
+
+继续拆弹～
 
 #### phase_3
 
@@ -394,7 +306,7 @@ End of assembler dump.
 
 若是不会算jump间接跳转地址，可以通过打断点，多次调试，比如设置第一参数为0是，观察会跳转到`mov    $0xcf,%eax`，0xcf的值为207，所以一个正确答案为 `0 207`  ,再就是设置第一个参数为1时，会跳转到`mov    $0x137,%eax`，0x137的十进制数为311,又一个正确答案为 `1 311`
 
-如何计算间接跳转地址：参考https://stackoverflow.com/questions/26543029/what-is-the-jmpq-command-doing-in-this-example
+如何计算间接跳转地址：参考[What is the jmpq command doing in this example](https://stackoverflow.com/questions/26543029/what-is-the-jmpq-command-doing-in-this-example)
 
 ```assembly
 jmpq   *0x402470(,%rax,8)
@@ -419,7 +331,7 @@ jmpq   *0x402470(,%rax,8)
 
 #### phase_4
 
-继续
+继续第四关
 
 ```assembly
 Dump of assembler code for function phase_4:
@@ -442,7 +354,7 @@ Dump of assembler code for function phase_4:
    0x000000000040103f <+51>:    mov    $0x0,%esi #%esi = 0
    0x0000000000401044 <+56>:    mov    0x8(%rsp),%edi #%edi = 第一个数
    0x0000000000401048 <+60>:    callq  0x400fce <func4> #调用函数 func4 
-   0x000000000040104d <+65>:    test   %eax,%eax #测试返回值是否为0
+   0x000000000040104d <+65>:    test   %eax,%eax   #测试返回值是否为0
    0x000000000040104f <+67>:    jne    0x401058 <phase_4+76>
    0x0000000000401051 <+69>:    cmpl   $0x0,0xc(%rsp)  #判断第二个数是否为0
    0x0000000000401056 <+74>:    je     0x40105d <phase_4+81>
@@ -456,12 +368,12 @@ func4函数对应的汇编代码
 ```assembly
 Dump of assembler code for function func4:
    0x0000000000400fce <+0>:    sub    $0x8,%rsp  # 栈顶 - 8 也就是取第一个数
-   0x0000000000400fd2 <+4>:    mov    %edx,%eax # %eax = %edx
+   0x0000000000400fd2 <+4>:    mov    %edx,%eax # %eax = %edx   
    0x0000000000400fd4 <+6>:    sub    %esi,%eax # %eax = %eax - esi
    0x0000000000400fd6 <+8>:    mov    %eax,%ecx # %ecx = %eax
-   0x0000000000400fd8 <+10>:    shr    $0x1f,%ecx # 逻辑右移
+   0x0000000000400fd8 <+10>:    shr    $0x1f,%ecx # 逻辑右移31位
    0x0000000000400fdb <+13>:    add    %ecx,%eax #　%ecx = %ecx + %eax
-   0x0000000000400fdd <+15>:    sar    %eax   # 算术右移
+   0x0000000000400fdd <+15>:    sar    %eax   # 算术右移一位，相当于除2
    0x0000000000400fdf <+17>:    lea    (%rax,%rsi,1),%ecx # %ecx= %rsi+%rax
    0x0000000000400fe2 <+20>:    cmp    %edi,%ecx  #比较 %edi 和 %ecx
    0x0000000000400fe4 <+22>:    jle    0x400ff2 <func4+36> # 相等就跳转到 +36
@@ -475,7 +387,7 @@ Dump of assembler code for function func4:
    0x0000000000400ffb <+45>:    lea    0x1(%rcx),%esi # %esi = %rcx + 1
    0x0000000000400ffe <+48>:    callq  0x400fce <func4>
    0x0000000000401003 <+53>:    lea    0x1(%rax,%rax,1),%eax # %eax = 1 + %rax + %rax * 1
-   0x0000000000401007 <+57>:    add    $0x8,%rsp # 栈顶 + 1
+   0x0000000000401007 <+57>:    add    $0x8,%rsp 
    0x000000000040100b <+61>:    retq   #返回
 End of assembler dump.
 ```
@@ -774,7 +686,8 @@ Dump of assembler code for function phase_6:
    0x00000000004011a4 <+176>:    mov    $0x6032d0,%edx # %edx = $0x6032d0
    0x00000000004011a9 <+181>:    jmp    0x401176 <phase_6+130>
 
-# 判断栈中的数字是否为1，若是就将0x6032d0放在栈中，若不是，则循环，将该地址再次进行计算后的地址存在栈中，继而可得到五个地址，0x6032e0  0x6032f0 0x603300 0x603310 0x603320 分别存放到 栈 %rsp+0x20 到 %rsp+0x48
+# 判断栈中的数字是否为1，若是就将0x6032d0放在栈中，若不是，则循环，将该地址再次进行计算后的地址存在栈中，
+继而可得到五个地址，0x6032e0  0x6032f0 0x603300 0x603310 0x603320 分别存放到 栈 %rsp+0x20 到 %rsp+0x48
 
    0x00000000004011ab <+183>:    mov    0x20(%rsp),%rbx
    0x00000000004011b0 <+188>:    lea    0x28(%rsp),%rax
