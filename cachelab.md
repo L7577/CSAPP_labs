@@ -258,4 +258,99 @@ for (kk = 0; kk < N; kk += bsize) {
 
 64*64 
 
-待更新
+```c
+//misses: 1243
+    for(int i = 0; i < N; i += 8){
+        for(int j = 0; j < M; j += 8){
+            for(int k = i; k < i + 4; k++){
+                
+                int t1 = A[k][j];
+                int t2 = A[k][j+1];
+                int t3 = A[k][j+2];
+                int t4 = A[k][j+3];
+                int t5 = A[k][j+4];
+                int t6 = A[k][j+5];
+                int t7 = A[k][j+6];
+                int t8 = A[k][j+7];
+
+
+                B[j][k] = t1;
+                B[j+1][k] = t2;
+                B[j+2][k] = t3;
+                B[j+3][k] = t4;
+
+                B[j][k+4] = t8;
+                B[j+1][k+4] = t7;
+                B[j+2][k+4] = t6;
+                B[j+3][k+4] = t5;
+
+            }
+
+            for(int l = 0; l < 4; ++l){
+                int t1 = A[i+4][j+3-l];
+                    int t2 = A[i+5][j+3-l];
+                    int t3 = A[i+6][j+3-l];
+                    int t4 = A[i+7][j+3-l];
+                    int t5 = A[i+4][j+4+l];
+                    int t6 = A[i+5][j+4+l];
+                    int t7 = A[i+6][j+4+l];
+                    int t8 = A[i+7][j+4+l];
+
+            B[j+4+l][i] = B[j+3-l][i+4];
+            B[j+4+l][i+1] = B[j+3-l][i+5];
+            B[j+4+l][i+2] = B[j+3-l][i+6];
+            B[j+4+l][i+3] = B[j+3-l][i+7];
+
+
+            B[j+3-l][i+4] = t1;
+            B[j+3-l][i+5] = t2;
+            B[j+3-l][i+6] = t3;
+            B[j+3-l][i+7] = t4;
+
+            B[j+4+l][i+4] = t5;
+            B[j+4+l][i+5] = t6;
+            B[j+4+l][i+6] = t7;
+            B[j+4+l][i+7] = t8;
+
+            }
+        }
+    }
+
+
+```
+
+61*67
+
+```c
+// misses: 2030
+
+    for(int i = 0;i < N; i += 16){
+        for(int j = 0;j < M;j += 16){
+            for(int k = i; k < i + 16 && k < N; k++){
+
+
+                        int tP = -1;
+                        int tV = 0;
+
+                        for(int l = j; l < j + 16 && l < M;++l){
+                            if(l == k){
+                                tP = k;
+                                tV = A[k][k];
+                            }
+                            else 
+                            {
+                                B[l][k] = A[k][l];
+                            }
+                            if (tP != -1)
+                            {
+                                B[tP][tP] = tV;
+                            }
+
+            }
+            
+        }
+    }
+    }
+
+```
+
