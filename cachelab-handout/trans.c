@@ -90,6 +90,9 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N])
 		
 		else if(N == 64){
 		// 64*64
+		/*
+		misses: 1243
+		*/
 
 
 		for(int i = 0; i < N; i += 8){
@@ -149,6 +152,12 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N])
 		}
 
 	}
+
+
+	/*
+    misses: 2030	
+	
+	*/
 
 	else if(N == 67){
 	
