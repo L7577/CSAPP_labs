@@ -1,7 +1,7 @@
 /*
- * Phase 3: Segregated explicit free list allocator.
- * Maintains 9 size-class free lists. First-fit search starts from
- * the smallest adequate size class and moves up.
+ * Phase 2: Explicit free list allocator.
+ * Free blocks contain pred/succ pointers in payload area,
+ * forming a doubly-linked list. First-fit search walks only free blocks.
  * Boundary tag coalescing on free. Minimum block size 32 bytes.
  */
 #include <stdio.h>
@@ -34,7 +34,7 @@ team_t team = {
 #define GET(p)       (*(unsigned int *)(p))
 #define PUT(p, val)  (*(unsigned int *)(p) = (val))
 
-/* Read and write a pointer at address p */
+/* Read and write a pointer at address p (for explicit free list) */
 #define GET_PTR(p)      (*(char **)(p))
 #define PUT_PTR(p, val) (*(char **)(p) = (val))
 
@@ -56,27 +56,17 @@ team_t team = {
 
 /* Minimum block size: header(4) + pred(8) + succ(8) + footer(4) = 32 */
 #define MIN_BLOCK  (4*DSIZE)
-
-/* Segregated free list: number of size classes */
-#define NUM_CLASSES 9
 /* $end mallocmacros */
 
-/* Size class thresholds: blocks up to this size go in the class */
-static const size_t class_threshold[NUM_CLASSES] = {
-    32, 64, 128, 256, 512, 1024, 2048, 4096,
-    (size_t)-1  /* unlimited */
-};
-
 /* Global variables */
-static char *heap_listp = 0;                    /* Pointer to prologue block */
-static char *free_list_heads[NUM_CLASSES];       /* Heads of segregated free lists */
+static char *heap_listp = 0;     /* Pointer to prologue block */
+static char *free_list_head = 0; /* Head of explicit free list */
 
-/* Function prototypes */
+/* Function prototypes for internal helper routines */
 static void *extend_heap(size_t words);
 static void place(void *bp, size_t asize);
 static void *find_fit(size_t asize);
 static void *coalesce(void *bp);
-static int get_size_class(size_t size);
 static void insert_free_block(void *bp);
 static void remove_free_block(void *bp);
 static void printblock(void *bp);
@@ -84,49 +74,32 @@ static void checkheap(int verbose);
 static void checkblock(void *bp);
 
 /*
- * get_size_class - Return the smallest size class that can hold size.
- */
-static int get_size_class(size_t size)
-{
-    int i;
-    for (i = 0; i < NUM_CLASSES; i++) {
-        if (size <= class_threshold[i])
-            return i;
-    }
-    return NUM_CLASSES - 1;
-}
-
-/*
- * insert_free_block - Insert free block at head of its size class list (LIFO).
+ * insert_free_block - Insert free block at head of free list (LIFO).
  */
 static void insert_free_block(void *bp)
 {
-    int cls = get_size_class(GET_SIZE(HDRP(bp)));
-    char *head = free_list_heads[cls];
-
-    PUT_PTR(bp, NULL);                         /* PRED(bp) = NULL */
-    PUT_PTR((char *)(bp) + DSIZE, head);       /* SUCC(bp) = head */
-    if (head != NULL)
-        PUT_PTR(head, bp);                     /* PRED(head) = bp */
-    free_list_heads[cls] = bp;
+    PUT_PTR(bp, NULL);              /* PRED(bp) = NULL */
+    PUT_PTR((char *)(bp) + DSIZE, free_list_head);  /* SUCC(bp) = old head */
+    if (free_list_head != NULL)
+        PUT_PTR(free_list_head, bp);  /* PRED(old head) = bp */
+    free_list_head = bp;
 }
 
 /*
- * remove_free_block - Remove a free block from its size class list.
+ * remove_free_block - Remove a free block from the free list.
  */
 static void remove_free_block(void *bp)
 {
-    int cls = get_size_class(GET_SIZE(HDRP(bp)));
     char *pred = PRED(bp);
     char *succ = SUCC(bp);
 
     if (pred != NULL)
-        PUT_PTR((char *)(pred) + DSIZE, succ);
+        PUT_PTR((char *)(pred) + DSIZE, succ);  /* SUCC(pred) = succ */
     else
-        free_list_heads[cls] = succ;
+        free_list_head = succ;
 
     if (succ != NULL)
-        PUT_PTR(succ, pred);
+        PUT_PTR(succ, pred);  /* PRED(succ) = pred */
 }
 
 /*
@@ -135,8 +108,6 @@ static void remove_free_block(void *bp)
 /* $begin mminit */
 int mm_init(void)
 {
-    int i;
-
     /* Create the initial empty heap */
     if ((heap_listp = mem_sbrk(4*WSIZE)) == (void *)-1)
         return -1;
@@ -147,8 +118,7 @@ int mm_init(void)
     heap_listp += (2*WSIZE);
     /* $end mminit */
 
-    for (i = 0; i < NUM_CLASSES; i++)
-        free_list_heads[i] = NULL;
+    free_list_head = NULL;
 
     /* Extend the empty heap with a free block of CHUNKSIZE bytes */
     if (extend_heap(CHUNKSIZE/WSIZE) == NULL)
@@ -172,6 +142,7 @@ void *mm_malloc(size_t size)
         mm_init();
     }
     /* $begin mmmalloc */
+    /* Ignore spurious requests */
     if (size == 0)
         return NULL;
 
@@ -222,7 +193,8 @@ void mm_free(void *bp)
 
 /*
  * coalesce - Boundary tag coalescing with free list management.
- *            Remove adjacent free blocks from their size class lists,
+ *            The block bp has just been marked free.
+ *            Remove any adjacent free blocks from free list,
  *            merge, then insert the merged block.
  */
 static void *coalesce(void *bp)
@@ -276,25 +248,30 @@ void *mm_realloc(void *ptr, size_t size)
     size_t oldsize;
     void *newptr;
 
+    /* If size == 0 then this is just free, and we return NULL. */
     if(size == 0) {
         mm_free(ptr);
         return 0;
     }
 
+    /* If oldptr is NULL, then this is just malloc. */
     if(ptr == NULL) {
         return mm_malloc(size);
     }
 
     newptr = mm_malloc(size);
 
+    /* If realloc() fails the original block is left untouched  */
     if(!newptr) {
         return 0;
     }
 
+    /* Copy the old data. */
     oldsize = GET_SIZE(HDRP(ptr));
     if(size < oldsize) oldsize = size;
     memcpy(newptr, ptr, oldsize);
 
+    /* Free the old block. */
     mm_free(ptr);
 
     return newptr;
@@ -321,21 +298,25 @@ static void *extend_heap(size_t words)
     char *bp;
     size_t size;
 
+    /* Allocate an even number of words to maintain alignment */
     size = (words % 2) ? (words+1) * WSIZE : words * WSIZE;
     if ((long)(bp = mem_sbrk(size)) == -1)
         return NULL;
 
-    PUT(HDRP(bp), PACK(size, 0));
-    PUT(FTRP(bp), PACK(size, 0));
-    PUT(HDRP(NEXT_BLKP(bp)), PACK(0, 1));
+    /* Initialize free block header/footer and the epilogue header */
+    PUT(HDRP(bp), PACK(size, 0));         /* Free block header */
+    PUT(FTRP(bp), PACK(size, 0));         /* Free block footer */
+    PUT(HDRP(NEXT_BLKP(bp)), PACK(0, 1)); /* New epilogue header */
 
+    /* Coalesce if the previous block was free */
     return coalesce(bp);
 }
 /* $end mmextendheap */
 
 /*
  * place - Place block of asize bytes at start of free block bp.
- *         Remove bp from free list. Split if remainder >= MIN_BLOCK.
+ *         Remove bp from free list. Split if remainder >= MIN_BLOCK,
+ *         and insert the remainder back into the free list.
  */
 /* $begin mmplace */
 /* $begin mmplace-proto */
@@ -362,8 +343,7 @@ static void place(void *bp, size_t asize)
 /* $end mmplace */
 
 /*
- * find_fit - Segregated first-fit search.
- *            Start from the smallest adequate size class and move up.
+ * find_fit - First-fit search on explicit free list.
  */
 /* $begin mmfirstfit */
 /* $begin mmfirstfit-proto */
@@ -372,14 +352,10 @@ static void *find_fit(size_t asize)
 {
     /* $end mmfirstfit */
 
-    int cls;
     char *bp;
-
-    for (cls = get_size_class(asize); cls < NUM_CLASSES; cls++) {
-        for (bp = free_list_heads[cls]; bp != NULL; bp = SUCC(bp)) {
-            if (asize <= GET_SIZE(HDRP(bp)))
-                return bp;
-        }
+    for (bp = free_list_head; bp != NULL; bp = SUCC(bp)) {
+        if (asize <= GET_SIZE(HDRP(bp)))
+            return bp;
     }
     return NULL;
 }
