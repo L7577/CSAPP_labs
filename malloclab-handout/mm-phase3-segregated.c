@@ -269,79 +269,34 @@ static void *coalesce(void *bp)
 }
 
 /*
- * mm_realloc - Optimized realloc.
- *   1. Shrink in-place if current block is large enough.
- *   2. Coalesce with next free block for in-place extension.
- *   3. Fallback: malloc + memcpy + free.
+ * mm_realloc - Naive implementation of realloc.
  */
 void *mm_realloc(void *ptr, size_t size)
 {
-    size_t oldsize, asize, next_size;
+    size_t oldsize;
     void *newptr;
-    char *next;
 
-    if (size == 0) {
+    if(size == 0) {
         mm_free(ptr);
-        return NULL;
+        return 0;
     }
 
-    if (ptr == NULL)
+    if(ptr == NULL) {
         return mm_malloc(size);
+    }
+
+    newptr = mm_malloc(size);
+
+    if(!newptr) {
+        return 0;
+    }
 
     oldsize = GET_SIZE(HDRP(ptr));
-
-    /* Compute adjusted new size */
-    if (size <= DSIZE)
-        asize = MIN_BLOCK;
-    else
-        asize = DSIZE * ((size + DSIZE + (DSIZE - 1)) / DSIZE);
-    if (asize < MIN_BLOCK)
-        asize = MIN_BLOCK;
-
-    /* Case 1: current block is already large enough */
-    if (asize <= oldsize) {
-        if ((oldsize - asize) >= MIN_BLOCK) {
-            /* Split off the remainder */
-            PUT(HDRP(ptr), PACK(asize, 1));
-            PUT(FTRP(ptr), PACK(asize, 1));
-            newptr = NEXT_BLKP(ptr);
-            PUT(HDRP(newptr), PACK(oldsize - asize, 0));
-            PUT(FTRP(newptr), PACK(oldsize - asize, 0));
-            coalesce(newptr);
-        }
-        return ptr;
-    }
-
-    /* Case 2: try to extend into the next block if it's free */
-    next = NEXT_BLKP(ptr);
-    if (!GET_ALLOC(HDRP(next))) {
-        next_size = GET_SIZE(HDRP(next));
-        if ((oldsize + next_size) >= asize) {
-            remove_free_block(next);
-            PUT(HDRP(ptr), PACK(oldsize + next_size, 1));
-            PUT(FTRP(ptr), PACK(oldsize + next_size, 1));
-            /* Split if remainder is large enough */
-            if ((oldsize + next_size - asize) >= MIN_BLOCK) {
-                PUT(HDRP(ptr), PACK(asize, 1));
-                PUT(FTRP(ptr), PACK(asize, 1));
-                newptr = NEXT_BLKP(ptr);
-                PUT(HDRP(newptr), PACK(oldsize + next_size - asize, 0));
-                PUT(FTRP(newptr), PACK(oldsize + next_size - asize, 0));
-                insert_free_block(newptr);
-            }
-            return ptr;
-        }
-    }
-
-    /* Case 3: fallback - malloc new, copy, free old */
-    newptr = mm_malloc(size);
-    if (!newptr)
-        return NULL;
-
-    if (size < oldsize)
-        oldsize = size;
+    if(size < oldsize) oldsize = size;
     memcpy(newptr, ptr, oldsize);
+
     mm_free(ptr);
+
     return newptr;
 }
 
