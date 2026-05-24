@@ -147,17 +147,15 @@ void *mm_malloc(size_t size)
 void mm_free(void *bp)
 {
     /* $end mmfree */
-    if (bp == 0) 
+    if (bp == 0)
         return;
 
-    /* $begin mmfree */
-    size_t size = GET_SIZE(HDRP(bp));
-    /* $end mmfree */
     if (heap_listp == 0){
         mm_init();
     }
     /* $begin mmfree */
 
+    size_t size = GET_SIZE(HDRP(bp));
     PUT(HDRP(bp), PACK(size, 0));
     PUT(FTRP(bp), PACK(size, 0));
     coalesce(bp);
