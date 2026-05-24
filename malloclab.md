@@ -163,9 +163,55 @@ Perf index = 44 (util) + 4 (thru) = 49/100
 吞吐量问题 trace 7/8 中大堆首次适配需扫描全部已分配块，Kops 仅 18 和 76。利用率问题 trace 9/10 中 realloc 总是 malloc+copy+free 导致严重外部碎片，利用率仅 27% 和 34%。
 
 
+## Phase 2: 显式空闲链表 (Explicit Free List)
+
+在空闲块 payload 区域嵌入前驱/后继指针，形成双向显式空闲链表。分配时仅遍历空闲块，避免扫描已分配块。
+
+空闲块结构变化：
+
+```
+Phase 1 (隐式):
+  空闲块: [header(4B)] [未使用 payload ...] [footer(4B)]
+
+Phase 2 (显式):
+  空闲块: [header(4B)] [pred(8B)] [succ(8B)] [...] [footer(4B)]
+```
+
+最小块从 16 字节增加到 32 字节（header 4 + pred 8 + succ 8 + footer 4 = 24，对齐至 32）。
+
+新增函数：
+- `insert_free_block` — LIFO 头部插入，O(1)
+- `remove_free_block` — 双向链表摘除，O(1)
+
+修改函数：
+- `find_fit` — 从遍历堆（含已分配块）改为遍历 free_list_head
+- `coalesce` — 合并前从链表摘除邻居，合并后插入结果
+- `place` — 从链表摘除被分配块，切分后插入剩余块
+
+```sh
+Results for mm malloc:
+trace  valid  util     ops      secs  Kops
+ 0       yes   89%    5694  0.000267 21326
+ 1       yes   92%    5848  0.000120 48896
+ 2       yes   94%    6648  0.000353 18849
+ 3       yes   96%    5380  0.000191 28182
+ 4       yes   66%   14400  0.000129111801
+ 5       yes   88%    4800  0.000394 12170
+ 6       yes   85%    4800  0.000412 11665
+ 7       yes   55%   12000  0.004628  2593
+ 8       yes   50%   24000  0.002946  8147
+ 9       yes   26%   14401  0.129025   112
+10       yes   34%   14401  0.007265  1982
+Total          70%  112372  0.145729   771
+
+Perf index = 42 (util) + 40 (thru) = 82/100
+```
+
+对比 Phase 1: 吞吐量 +1143%（62 → 771 Kops），trace 7/8 从 18/76 提升至 2593/8147。利用率 -4%（74% → 70%），因为最小块增大导致小分配内部碎片增加。
+
 ### 改进方向
 
-下一步将隐式空闲链表升级为显式空闲链表 (Explicit Free List)，在空闲块 payload 中维护前驱后继指针，使分配时只遍历空闲块。
+下一步引入分离适配 (Segregated Fits)，按大小分桶减少小分配碎片，同时提升搜索效率。
 
 
 
